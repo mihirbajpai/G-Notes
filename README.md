@@ -18,7 +18,7 @@ The Notes App offers a user-friendly interface that allows users to create and s
 
 To install the Notes App on your Android device:
 
-1. Download the APK file from the [release page]([https://drive.google.com/file/d/157zCylLs3wv51LCGnEGtVFnpy7atFBp9/view?usp=sharing]).
+1. Download the APK file from the https://drive.google.com/file/d/157zCylLs3wv51LCGnEGtVFnpy7atFBp9.
 2. Enable installation from unknown sources in your device settings.
 3. Open the downloaded APK file and follow the on-screen instructions to install the app.
 
