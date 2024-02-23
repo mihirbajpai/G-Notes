@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1062667025523",
+    "project_id": "gnotes-2a7e9",
+    "storage_bucket": "gnotes-2a7e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062667025523:android:1f3424f385869aa131fe06",
+        "android_client_info": {
+          "package_name": "com.example.notes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvVZjcBYf2M1rbL40CyUXBQDj6e_kHkSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

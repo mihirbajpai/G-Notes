@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Notes-Mihir Bajpai</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="default_web_client_id" translatable="false">1062667025523-2qj2jjqp6nqj9toe2u3on239j14kd7ss.apps.googleusercontent.com</string>
+</resources>
