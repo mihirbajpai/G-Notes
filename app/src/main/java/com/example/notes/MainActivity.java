@@ -1,18 +1,24 @@
 package com.example.notes;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,33 +37,44 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private List<Note> notesList;
-    private FirebaseUser currentUser;
+    private FirebaseUser currentUser = null;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = findViewById(R.id.progressBar);
+        int customProgressColor = ContextCompat.getColor(this, R.color.black);
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(customProgressColor));
+
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser != null) {
-            Toast.makeText(this, "Please wait while loading the data.", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.VISIBLE);
             displayNotesFromFirebase();
         } else {
             if (savedInstanceState == null) {
-                LoginFragment loginFragment = new LoginFragment();
-                loginFragment.setOnLoginSuccessListener(this);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, loginFragment)
-                        .commit();
+                showLoginFragment();
             }
         }
+    }
 
+    private void showLoginFragment() {
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.setOnLoginSuccessListener(this);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, loginFragment)
+                .commit();
     }
 
     @Override
     public void onLoginSuccess() {
+        progressBar.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
-        Toast.makeText(this, "Please wait while loading the data.", Toast.LENGTH_SHORT).show();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         displayNotesFromFirebase();
     }
 
@@ -103,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("notes");
 
-
         String noteId = generateNoteId();
         databaseRef.child(noteId).setValue(noteContent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -148,11 +164,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                         notesList.add(note);
                     }
                     adapter.notifyDataSetChanged();
+
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Log.e("Firebase", "Error fetching notes", databaseError.toException());
+
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         } else {
@@ -166,7 +186,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     FirebaseAuth.getInstance().signOut();
-                    finish();
+                    GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
+                            .addOnCompleteListener(task -> {
+                                finish();
+                            });
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .show();

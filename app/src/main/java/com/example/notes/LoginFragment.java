@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.notes.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,13 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginFragment extends Fragment {
 
     private SignInButton googleAuth;
     private FirebaseAuth auth;
-    private FirebaseDatabase database;
     private GoogleSignInClient googleSignInClient;
     private OnLoginSuccessListener loginSuccessListener;
     private static final int RC_SIGN_IN = 9001;
@@ -44,9 +41,11 @@ public class LoginFragment extends Fragment {
         googleAuth = view.findViewById(R.id.sign_in_button);
 
         auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
@@ -56,12 +55,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void googleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -96,7 +89,6 @@ public class LoginFragment extends Fragment {
             }
         });
     }
-
 
     public void setOnLoginSuccessListener(OnLoginSuccessListener listener) {
         this.loginSuccessListener = listener;

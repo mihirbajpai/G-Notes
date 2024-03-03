@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +48,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         });
 
         holder.itemView.setOnClickListener(view -> showEditNoteDialog(noteData.getNoteId(), noteData.getNoteContent()));
+
+        if (position % 2 == 0) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+        }
     }
 
     @Override
